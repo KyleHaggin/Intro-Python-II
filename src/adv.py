@@ -1,4 +1,9 @@
+# begin imports
+# external imports
+import sys
+# internal imports
 from room import Room
+from player import Player
 
 # Declare all the rooms
 
@@ -34,11 +39,57 @@ room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
 
-# Initialize the new player
-'''code here'''
+# Ask player for their name and initialize
+player = Player(input('Enter your player name: '), room['outside'])
 
-# Actual game loop here
-while true:
+# TODO remove test print before deployment
+print(player.name, player.current_room)
+
+# TODO create a game rules printout
+
+# Actual REPL game loop here
+while True:
+    print(player.current_room)
+    action = input('What do you do: ')
+
+    # input action/error check and action
+    if len(action) == 1:
+        # quit if q is entered
+        if action == 'q':
+            print(f'Thank you for playing {player.name}!')
+            sys.exit()
+        # move north action
+        elif action == 'n':
+            if player.current_room.n_to is None:
+                print('That is not a valid direction.')
+            else:
+                player.current_room = player.current_room.n_to
+                print(f'You walk to the north and '
+                      f'enter the {player.current_room.name}')
+        # move south action
+        elif action == 's':
+            if player.current_room.s_to is None:
+                print('That is not a valid direction.')
+            else:
+                player.current_room = player.current_room.s_to
+                print(f'You walk to the south and '
+                      f'enter the {player.current_room.name}')
+        # move east action
+        elif action == 'e':
+            if player.current_room.e_to is None:
+                print('That is not a valid direction.')
+            else:
+                player.current_room = player.current_room.e_to
+                print(f'You walk to the east and '
+                      f'enter the {player.current_room.name}')
+        # move west action
+        elif action == 'w':
+            if player.current_room.w_to is None:
+                print('That is not a valid direction.')
+            else:
+                player.current_room = player.current_room.w_to
+                print(f'You walk to the west and '
+                      f'enter the {player.current_room.name}')
     break
 
 # Make a new player object that is currently in the 'outside' room.
