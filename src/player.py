@@ -44,3 +44,13 @@ class Player:
             self.current_room.items.append(self.items.pop(hldr))
         else:
             print(f'You do not have {item} in your inventory.')
+
+    def describe_item(self, item):
+        hldr = None
+        for x in range(len(self.items)):
+            if self.items[x].name == item:
+                hldr = x
+        if hldr is not None:
+            print(self.items[hldr].description)
+        else:
+            print(f'You do not have {item} in your inventory.')

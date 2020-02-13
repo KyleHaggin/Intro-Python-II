@@ -55,12 +55,12 @@ player.items.extend([items['sword']])
 # Actual REPL game loop here
 while True:
     # print the current room, its description, and items in the room
-    print('\n \n \n ')
+    print('\n')
     print(player.current_room)
     action = input('What do you do: ')
 
     # add new lines to help with output readability
-    print('\n')
+    print('\n \n')
 
     # input action/error check and action
     # turn everything into lower case to preven errors and bloat
@@ -96,8 +96,10 @@ while True:
         elif action[0] in ['drop']:
             player.on_drop(action[1])
         # [verb] [object] move command
-        elif action[0] in ['move']:
+        elif action[0] in ['move', 'go']:
             player.move(action[1])
+        elif action[0] in['describe', 'd']:
+            player.describe_item(action[1])
         # Error check
         else:
             print('Not a valid two word entry.')
