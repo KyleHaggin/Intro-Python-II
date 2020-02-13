@@ -4,9 +4,16 @@ import sys
 # internal imports
 from room import Room
 from player import Player
+from item import Item
+
+# Declare all the items
+items = {
+    'gold': Item('gold', 'A valuable gold coin.'),
+    'sword': Item('sword', 'A chipped iron sword.'),
+}
+
 
 # Declare all the rooms
-
 room = {
     'outside':  Room("Outside Cave Entrance",
                      "North of you, the cave mount beckons"),
@@ -26,9 +33,10 @@ chamber! Sadly, it has already been completely emptied by
 earlier adventurers. The only exit is to the south."""),
 }
 
+# Populate rooms with items
+room['treasure'].items = items['gold']
 
 # Link rooms together
-
 room['outside'].n_to = room['foyer']
 room['foyer'].s_to = room['outside']
 room['foyer'].n_to = room['overlook']
@@ -38,35 +46,39 @@ room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
-
 # Ask player for their name and initialize
-player = Player(input('Enter your player name: '), room['outside'])
+player = Player(input('Enter your player name: '), room['treasure']) #TODO change back to outside
+player.items = items['gold']
+player.items += items['sword']
+print(player.items.name)
 
 # TODO create a game rules printout
 
 # Actual REPL game loop here
 while True:
+    # print the current room, its description, and items in the room
+    print('\n \n \n ')
     print(player.current_room)
     action = input('What do you do: ')
 
+    # add new lines to help with output readability
+    print('\n')
+
     # input action/error check and action
+    action = action.split()
     if len(action) == 1:
         # quit if q is entered
-        if action == 'q':
+        if action[0] == 'q':
             print(f'Thank you for playing {player.name}!')
             sys.exit()
+        elif action[0] == 'i':
+            player.inventory()
+        elif action in ['n', 's', 'e', 'w']:
+            player.move(action[0])
         else:
-            player.move(action)
-
-# Make a new player object that is currently in the 'outside' room.
-
-# Write a loop that:
-#
-# * Prints the current room name
-# * Prints the current description (the textwrap module might be useful here).
-# * Waits for user input and decides what to do.
-#
-# If the user enters a cardinal direction, attempt to move to the room there.
-# Print an error message if the movement isn't allowed.
-#
-# If the user enters "q", quit the game.
+            print('Not a valid entry.')
+    elif len(action) == 2:
+        if action[0] in ['get', 'take']:
+            player.on_take(action[1])
+        elif action[0] in ['drop']:
+            player.on_drop(action[1])
