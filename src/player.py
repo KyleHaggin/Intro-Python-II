@@ -13,21 +13,33 @@ class Player:
             print('That movement is currently not allowed')
 
     def inventory(self):
-        if len(self.items.name) == 0:
+        if len(self.items) == 0:
             print('You currently have no items in your inventory.')
         else:
             print('You currently have ' +
-                  ', '.join(item for item in self.items.name) +
+                  ', '.join(
+                      self.items[item].name for item in range(len(self.items))
+                      ) +
                   ' in your inventory.')
 
     def on_take(self, item):
-        if item in self.current_room.items.name:
-            print(f'You place the {item} in your inventory.')
+        hldr = None
+        for x in range(len(self.current_room.items)):
+            if self.current_room.items[x].name == item:
+                hldr = x
+        if hldr is not None:
+            self.current_room.items[hldr].on_take()
+            self.items.append(self.current_room.items.pop(hldr))
         else:
             print(f'You cannot find the {item} in this room.')
 
     def on_drop(self, item):
-        if item in self.items.name:
-            print(f'You drop the {item} on the floor of the room.')
+        hldr = None
+        for x in range(len(self.items)):
+            if self.items[x].name == item:
+                hldr = x
+        if hldr is not None:
+            self.items[hldr].on_drop()
+            self.current_room.items.append(self.items.pop(hldr))
         else:
             print(f'You do not have {item} in your inventory.')

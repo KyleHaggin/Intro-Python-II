@@ -34,7 +34,7 @@ earlier adventurers. The only exit is to the south."""),
 }
 
 # Populate rooms with items
-room['treasure'].items = items['gold']
+room['treasure'].items.extend([items['gold']])
 
 # Link rooms together
 room['outside'].n_to = room['foyer']
@@ -47,11 +47,8 @@ room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
 # Ask player for their name and initialize
-player = Player(input('Enter your player name: '), room['treasure']) #TODO change back to outside
-player.items = items['gold']
-player.items += items['sword']
-print(player.items.name)
-
+player = Player(input('Enter your player name: '), room['outside'])
+player.items.extend([items['sword']])
 # TODO create a game rules printout
 
 # Actual REPL game loop here
