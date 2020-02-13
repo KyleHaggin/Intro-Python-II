@@ -6,7 +6,8 @@ class Player:
         self.current_room = current_room
         self.items = items
 
-    def move(self, direction):
+    def move(self, command):
+        direction = command[0]
         if getattr(self.current_room, f'{direction}_to'):
             self.current_room = getattr(self.current_room, f'{direction}_to')
         else:

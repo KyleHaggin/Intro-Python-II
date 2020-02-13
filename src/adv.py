@@ -46,8 +46,9 @@ room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
-# Ask player for their name and initialize
+# Ask player for their name and initialize starting room
 player = Player(input('Enter your player name: '), room['outside'])
+# Add items to player inventory
 player.items.extend([items['sword']])
 # TODO create a game rules printout
 
@@ -62,20 +63,43 @@ while True:
     print('\n')
 
     # input action/error check and action
+    # turn everything into lower case to preven errors and bloat
+    action = action.lower()
+    # split input to determine action type
     action = action.split()
+    # [verb] actions
     if len(action) == 1:
         # quit if q is entered
-        if action[0] == 'q':
+        if action[0] in ['q', 'quit']:
             print(f'Thank you for playing {player.name}!')
             sys.exit()
-        elif action[0] == 'i':
+        # Check inventory
+        elif action[0] in ['i', 'inventory']:
             player.inventory()
-        elif action in ['n', 's', 'e', 'w']:
+        # Movement commands
+        elif action[0] in [
+            'n', 'north',
+            's', 'south',
+            'e', 'east',
+            'w', 'west'
+                    ]:
             player.move(action[0])
+        # Error check
         else:
-            print('Not a valid entry.')
+            print('Not a valid one word entry.')
+    # [verb] [object] actions
     elif len(action) == 2:
+        # Pickup item in current room to inventory
         if action[0] in ['get', 'take']:
             player.on_take(action[1])
+        # Drop item in inventory to current room
         elif action[0] in ['drop']:
             player.on_drop(action[1])
+        # [verb] [object] move command
+        elif action[0] in ['move']:
+            player.move(action[1])
+        # Error check
+        else:
+            print('Not a valid two word entry.')
+    else:
+        print('Not a valid entry.')
